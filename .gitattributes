@@ -1,0 +1,8 @@
+# Keep text diffs consistent across Windows and other machines.
+* text=auto
+*.md text eol=lf
+*.json text eol=lf
+*.ps1 text eol=lf
+*.sh text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf

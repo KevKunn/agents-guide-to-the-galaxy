@@ -1,0 +1,22 @@
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+
+# Machine-specific installation state, backups, and scratch work
+/.local/
+/backups/
+/work/
+
+# Generated Python files
+__pycache__/
+*.py[cod]
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Track repository documentation even when a global ignore excludes docs/.
+!/docs/
+!/docs/**
