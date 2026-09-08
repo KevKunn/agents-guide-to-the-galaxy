@@ -1,22 +1,13 @@
 # Skills
 
-Canonical skill folders will be imported here after their source and installation
-targets have been reviewed.
+This directory contains the canonical imported skills. Each named folder retains
+its original `SKILL.md` and supporting scripts, references, templates, and optional
+agent metadata. Existing invocation policies and skill text are preserved.
 
-Each skill keeps its complete directory structure:
+Select targets in `manifest.json`, or run `install.ps1 -Mode Configure`. Only
+manifest entries are installed; this collection README is not a skill.
 
-```text
-<skill-name>/
-  SKILL.md
-  scripts/       # Optional
-  references/    # Optional
-  templates/     # Optional
-```
-
-Keep relative resource paths intact. Record verified upstream provenance and
-retain any licenses when importing third-party material. Check agent-specific
-tool references and local paths before enabling a skill for another agent.
-
-The root README in this directory documents the collection; it is not itself an
-installable skill. The planned installer will only install skills explicitly
-listed in the manifest.
+See `../provenance.json` for original locations and file hashes,
+`../THIRD_PARTY_NOTICES.md` for attribution, and `../docs/skill-review.md` for
+dependencies identified during import. Add source and licensing information when
+bringing in new third-party material.

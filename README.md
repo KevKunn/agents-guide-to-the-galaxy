@@ -2,52 +2,64 @@
 
 Don't panic. There's a skill for that.
 
-A personal, version-controlled home for reusable AI agent skills and, eventually,
-shared instructions and tooling for Codex and Claude Code.
+A personal, version-controlled home for AI agent skills used by Codex and Claude
+Code. It currently contains 33 canonical skills and a Windows installer that
+links selected skills into each agent's discovery folder.
 
-## Current status
+## Get started
 
-This initial revision establishes the repository and records the migration plan.
-No skills have been imported, no installer has been implemented, and existing
-agent installations have not been changed.
+Run these commands from the checkout in PowerShell 7 on Windows:
 
-## How it will work
+```powershell
+# Pick targets per skill (Enter keeps the saved choice).
+pwsh -File ./install.ps1 -Mode Configure
 
-- Maintain each canonical skill in `skills/<name>/`, including its `SKILL.md`,
-  scripts, references, and templates.
-- Store per-skill installation choices in a versioned manifest: Codex, Claude
-  Code, both, or neither.
-- Use a PowerShell installer to create individual Windows directory junctions
-  from agent discovery folders to the canonical skill folders.
-- Edit skills in this repository and review changes with Git. Existing links
-  expose updates after edits or pulls without copying files. Running agent
-  sessions may need a refresh or restart to reload instructions.
-- Rerun the installer after adding, renaming, or removing skills, changing
-  installation choices, moving the checkout, or cloning onto another machine.
+# Inspect the changes before applying them.
+pwsh -File ./install.ps1 -Mode Plan -AdoptExisting
+pwsh -File ./install.ps1 -Mode Apply -AdoptExisting
+```
 
-Junctions are local installation artifacts. Git tracks the actual skill files and
-installation choices; the installer recreates the junctions on each machine.
-Editing through a junction also edits the repository's files.
+The initial choices match the previous installation: 26 skills for Codex and 33
+for Claude Code. Existing matching folders and junctions are backed up before
+adoption. Differing content is a conflict that must be resolved first.
+
+## One source of truth
+
+Each installed skill directory is a Windows junction to `skills/<name>` in this
+checkout. Editing or pulling updates to existing skills immediately changes what
+the linked paths expose. An already-running agent session may need to refresh or
+restart to load updated instructions. Edits made through an agent's linked folder
+also change the repository files.
+
+Run Configure and Apply when selecting new targets or adding skills. Run Plan and
+Apply after renaming/removing skills or moving the checkout. Git stores the source
+files and manifest; junctions and installation backups are local to each machine.
 
 ## Repository layout
 
 ```text
-skills/             Canonical skills after migration
-docs/migration.md   Inventory findings, migration sequence, and installer design
+skills/                   Canonical skills and their supporting resources
+manifest.json             Per-skill agent selections and legacy-copy retirement
+provenance.json           Initial source records and imported file hashes
+install.ps1               Configure, plan, apply, and restore
+tests/installer.tests.ps1  Isolated Windows installer checks
+docs/installation.md      Usage, updates, backups, and recovery
+docs/skill-review.md       Import review and dependency notes
+docs/migration.md          Initial inventory and migration record
+licenses/                 Third-party notices
+THIRD_PARTY_NOTICES.md     Attribution and provenance scope
 ```
 
-The next phase will introduce `manifest.json` and `install.ps1`. Agent-specific
-instructions, hooks, and configuration templates will follow after the skills
-migration is complete.
+## Maintenance
 
-## Scope
+Edit skills here and review their Git diffs. Preserve supporting resources and
+upstream attribution. Existing tool-specific dependencies and invocation policies
+are retained; linking a skill does not install its MCP servers or guarantee its
+workflow works on both agents. See [the import review](docs/skill-review.md).
 
-Keep reusable skills and their supporting resources here. Preserve third-party
-licenses and attribution, and record upstream sources and revisions as they are
-verified during import. Tool-managed bundled skills stay under their tool's
-management. Project-specific instructions belong with the project they describe.
+Tool-managed system skills and plugins remain under their tool's management.
+Credentials, authentication state, caches, sessions, generated memories, and local
+backups stay outside versioned content. Custom instructions and other agent
+tooling are a later phase.
 
-Credentials, authentication state, sessions, caches, generated memories, and local
-installation backups stay outside versioned content.
-
-See [the migration plan](docs/migration.md) for the initial inventory and next steps.
+See [installation and recovery](docs/installation.md) for full instructions.

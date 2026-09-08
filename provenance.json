@@ -1,0 +1,823 @@
+{
+  "importedAt": "2026-09-08",
+  "skills": [
+    {
+      "name": "ask-matt",
+      "importedFrom": ".agents/skills/ask-matt",
+      "originalLocations": [
+        ".agents/skills/ask-matt",
+        ".claude/skills/ask-matt"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/ask-matt/SKILL.md",
+        "recordedSkillFolderHash": "c7d57789b230d6f88d26ca81ab9d03bad160171f",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "a0f30d3072de6121353cd513f1b6bedd526d0a296edd9cddefae5b3f27f367b2"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "d30cfa5b0e84e2ca10b8d263b9dfcc13c3aa089ae6bc26096bc549fc037d274e"
+        }
+      ]
+    },
+    {
+      "name": "break-it-down",
+      "importedFrom": ".agents/skills/break-it-down",
+      "originalLocations": [
+        ".agents/skills/break-it-down",
+        ".claude/skills/break-it-down"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "b65fb50b2b70f11d31192eef813cb439c60e8f191e42d76da4d2325d02519940"
+        }
+      ]
+    },
+    {
+      "name": "commit",
+      "importedFrom": ".claude/skills/commit",
+      "originalLocations": [
+        ".claude/skills/commit"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "49796626915e6828628c0c1d04cc3e7a0e6ccf1d0419f2b78446db049accea78"
+        }
+      ]
+    },
+    {
+      "name": "convention-dx-review",
+      "importedFrom": ".agents/skills/convention-dx-review",
+      "originalLocations": [
+        ".agents/skills/convention-dx-review",
+        ".claude/skills/convention-dx-review"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "Contains Claude model or subagent terminology; cross-agent behavior needs review.",
+        "Requires specific agent or MCP tools.",
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "c00b35b70d5c8fb67004279630600a5261c0ebb8d55b093864da273143625d58"
+        }
+      ]
+    },
+    {
+      "name": "create_session_summary",
+      "importedFrom": ".agents/skills/create_session_summary",
+      "originalLocations": [
+        ".agents/skills/create_session_summary",
+        ".claude/skills/create_session_summary"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows.",
+        "Existing underscore name retained for compatibility."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "5e6049a8a1d4c39ff5670203f334dd017c6a524b1ab14c3c9dfb937b7270b526"
+        }
+      ]
+    },
+    {
+      "name": "create-digest",
+      "importedFrom": ".claude/skills/create-digest",
+      "originalLocations": [
+        ".claude/skills/create-digest"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "Requires specific agent or MCP tools."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "0e630a564708b594fcf7286238675cfd55f9f7f19d07010b29ab977313b75a6d"
+        }
+      ]
+    },
+    {
+      "name": "diagnose",
+      "importedFrom": ".agents/skills/diagnose",
+      "originalLocations": [
+        ".agents/skills/diagnose",
+        ".claude/skills/diagnose"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/diagnose/SKILL.md",
+        "recordedSkillFolderHash": "43d464d0e9d1049b9d525975c0f7367ab7e01a5f",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "dd1506e36aa87c8c462a08fe139033dca4eed6673fc62527acb20e00f55da6b1"
+        },
+        {
+          "path": "scripts/hitl-loop.template.sh",
+          "sha256": "a14e4d722c2324c130d331e87267bc9f9b03bbaf32c3b8e08310b039ea5e5863"
+        }
+      ]
+    },
+    {
+      "name": "document-feature",
+      "importedFrom": ".agents/skills/document-feature",
+      "originalLocations": [
+        ".agents/skills/document-feature",
+        ".claude/skills/document-feature"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "6e24eca9fb04386c82b3c4646ca54ccbe2b829ac785eabfd57fde7b1fc5f4a95"
+        },
+        {
+          "path": "STRUCTURE.md",
+          "sha256": "44715ddb257aa4647d76fa9b1a06531b45871d90d187be0f5416cad1ff02686d"
+        }
+      ]
+    },
+    {
+      "name": "dx-lookup",
+      "importedFrom": ".agents/skills/dx-lookup",
+      "originalLocations": [
+        ".agents/skills/dx-lookup",
+        ".claude/skills/dx-lookup"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "Contains Claude model or subagent terminology; cross-agent behavior needs review.",
+        "Requires specific agent or MCP tools."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "42260a59219bb7ef4bb711c319ae9d023fda14dc0f00a816e3af01d826f73fa7"
+        }
+      ]
+    },
+    {
+      "name": "find-skills",
+      "importedFrom": ".agents/skills/find-skills",
+      "originalLocations": [
+        ".agents/skills/find-skills",
+        ".claude/skills/find-skills"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "vercel-labs/skills",
+        "url": "https://github.com/vercel-labs/skills.git",
+        "skillPath": "skills/find-skills/SKILL.md",
+        "recordedSkillFolderHash": "3013fdeb8a11b10b1eb795ec3ae8bfca38f7c26d",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "1e85f6f9686e145aca4a124e3b704b9bbea9aa87e08515c1e352eee70f6e6e7a"
+        }
+      ]
+    },
+    {
+      "name": "grill-me",
+      "importedFrom": ".agents/skills/grill-me",
+      "originalLocations": [
+        ".agents/skills/grill-me",
+        ".claude/skills/grill-me"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/productivity/grill-me/SKILL.md",
+        "recordedSkillFolderHash": "2a1ad17028306ebe45f0e49703fa28b9b2e7f499",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "c9df326c4ab635765ea884471d21f4e21d5b0ec85aec43a06c238307841eb4bc"
+        }
+      ]
+    },
+    {
+      "name": "grill-with-docs",
+      "importedFrom": ".agents/skills/grill-with-docs",
+      "originalLocations": [
+        ".agents/skills/grill-with-docs",
+        ".claude/skills/grill-with-docs"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/grill-with-docs/SKILL.md",
+        "recordedSkillFolderHash": "2969a1224c70fe41b9dd2ddbe32c2ec62f2815bd",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "ADR-FORMAT.md",
+          "sha256": "dba54707c3251660ecf7ee6ff154a816a62badddd4ef403062f3a34e23509636"
+        },
+        {
+          "path": "CONTEXT-FORMAT.md",
+          "sha256": "44bd8a4a02cbd441e52ec5a12c24cdc45820744094a3ccb4b5a1e47b509860f0"
+        },
+        {
+          "path": "SKILL.md",
+          "sha256": "869978a6f06234a0892f04ca90955f63ca02af397d2b5e570202c92d646bfc44"
+        }
+      ]
+    },
+    {
+      "name": "handoff",
+      "importedFrom": ".agents/skills/handoff",
+      "originalLocations": [
+        ".agents/skills/handoff",
+        ".claude/skills/handoff"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/productivity/handoff/SKILL.md",
+        "recordedSkillFolderHash": "85c644da8f99d073b434261f1e3fc058e2116236",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "a10d0dbc21b4ed7431f8e3228a6b5e155edad7c215a34507a5a6e9d8b4e607eb"
+        }
+      ]
+    },
+    {
+      "name": "learning-expedition",
+      "importedFrom": ".agents/skills/learning-expedition",
+      "originalLocations": [
+        ".agents/skills/learning-expedition",
+        ".claude/skills/learning-expedition",
+        ".codex/skills/learning-expedition"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "bc5a88e93f39349d9b7551f16951099a71f3a830c06a6fb1e0b970bc32d62e17"
+        }
+      ]
+    },
+    {
+      "name": "playwright-agent",
+      "importedFrom": ".agents/skills/playwright-agent",
+      "originalLocations": [
+        ".agents/skills/playwright-agent",
+        ".claude/skills/playwright-agent"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "Contains Claude model or subagent terminology; cross-agent behavior needs review.",
+        "Requires specific agent or MCP tools.",
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "cf7cdd2e8c732c95ebb98e739866d1ebfd68498ef4a39993b40c2844aafb61ef"
+        }
+      ]
+    },
+    {
+      "name": "prm-business-objects",
+      "importedFrom": ".claude/skills/prm-business-objects",
+      "originalLocations": [
+        ".claude/skills/prm-business-objects"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "d1699f69d4d6e4baff2459abea679b3ab6d1e18baf2f5a54f12540f46e722278"
+        }
+      ]
+    },
+    {
+      "name": "prm-stateworkflow",
+      "importedFrom": ".claude/skills/prm-stateworkflow",
+      "originalLocations": [
+        ".claude/skills/prm-stateworkflow"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "78bdf9fa78368e4d22456d758b52cf52bc0a89afc3ad0f06ecf05ada3b0f977d"
+        }
+      ]
+    },
+    {
+      "name": "prm-xaf-blazor-ui",
+      "importedFrom": ".claude/skills/prm-xaf-blazor-ui",
+      "originalLocations": [
+        ".claude/skills/prm-xaf-blazor-ui"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "richedit-color-picker.md",
+          "sha256": "053185317fb541c784e675b8f2dbe445bc9701db7aa23670f995158e8be9abd2"
+        },
+        {
+          "path": "SKILL.md",
+          "sha256": "5999f635c4cc272b32dbb74f24a841839cf7d36b347933b07b6aedec7d457123"
+        }
+      ]
+    },
+    {
+      "name": "prm-xaf-model",
+      "importedFrom": ".claude/skills/prm-xaf-model",
+      "originalLocations": [
+        ".claude/skills/prm-xaf-model"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "05fb9df20b9458b116380cf40a208daf32a8bd429c1184854ebbf78dcaecfae8"
+        }
+      ]
+    },
+    {
+      "name": "prototype",
+      "importedFrom": ".agents/skills/prototype",
+      "originalLocations": [
+        ".agents/skills/prototype",
+        ".claude/skills/prototype"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/prototype/SKILL.md",
+        "recordedSkillFolderHash": "c91bdc5d02d42ed88a3082a8fa83338895b55bd4",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "LOGIC.md",
+          "sha256": "3ce34ce7c2d06bcbdac4d846aafc488bbef0b2cd067134eeeda34c3804842f2f"
+        },
+        {
+          "path": "SKILL.md",
+          "sha256": "9923f050edb131e5604fcb6d63bd281221de121d48c500296b405ab9738c91a3"
+        },
+        {
+          "path": "UI.md",
+          "sha256": "be9846286540f0db138f7ba02e0b52ac8ba14ee561992be6788e4725284c89b7"
+        }
+      ]
+    },
+    {
+      "name": "sanitize-doc",
+      "importedFrom": ".agents/skills/sanitize-doc",
+      "originalLocations": [
+        ".agents/skills/sanitize-doc",
+        ".claude/skills/sanitize-doc"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "2e34f9fdcc6d5916107b8761be602eb1ac7ec933cd494e6b9f3c070a249d245e"
+        }
+      ]
+    },
+    {
+      "name": "search-knowledgebase",
+      "importedFrom": ".agents/skills/search-knowledgebase",
+      "originalLocations": [
+        ".agents/skills/search-knowledgebase",
+        ".claude/skills/search-knowledgebase"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "Contains machine-specific Windows paths.",
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "1cd2e8e0dd0aa5a72a419c0b1762dad0e776012d08289d44b7ddadbe3e571585"
+        },
+        {
+          "path": "scripts/search-knowledgebase.ps1",
+          "sha256": "2fa66456e974d1c0d56769a2dc9f37a7ca09b26cea6bfdf3c0c85392907eebf0"
+        }
+      ]
+    },
+    {
+      "name": "setup-matt-pocock-skills",
+      "importedFrom": ".agents/skills/setup-matt-pocock-skills",
+      "originalLocations": [
+        ".agents/skills/setup-matt-pocock-skills",
+        ".claude/skills/setup-matt-pocock-skills"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
+        "recordedSkillFolderHash": "77638955bebe492948244f1338e54ca1a9445c29",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "domain.md",
+          "sha256": "f19d612a355908fb648213221e3d70d5732c1b37fe8c680bb2f3fe6fc9f4a953"
+        },
+        {
+          "path": "issue-tracker-github.md",
+          "sha256": "4c26c2bfb4776acd975cbdbbd27bad623e3522eb53e388129e6e170aaf3c9bd4"
+        },
+        {
+          "path": "issue-tracker-gitlab.md",
+          "sha256": "a87500572b9bc8c86f54ee448e9e651278fb9e9c8edfd63797a6783ed71860a9"
+        },
+        {
+          "path": "issue-tracker-local.md",
+          "sha256": "5f7f87f14a6f391f9b44ee61b1c2fc3d78faa35a51f678112c4f5e3170785674"
+        },
+        {
+          "path": "SKILL.md",
+          "sha256": "285193911e7ad513418901c4d96ce9d6591e7786f333eaccfbab3ae289e60579"
+        },
+        {
+          "path": "triage-labels.md",
+          "sha256": "493d08d7a8007d3604cdf64d45717045034a5037c9e9917bae1ad9340fad75b8"
+        }
+      ]
+    },
+    {
+      "name": "sql-lookup",
+      "importedFrom": ".agents/skills/sql-lookup",
+      "originalLocations": [
+        ".agents/skills/sql-lookup",
+        ".claude/skills/sql-lookup"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "Contains Claude model or subagent terminology; cross-agent behavior needs review.",
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "cc743051473424f3d42d298f8d6516f483151feb2ec2d85690fc491c14903231"
+        }
+      ]
+    },
+    {
+      "name": "sql-pipe-lookup",
+      "importedFrom": ".claude/skills/sql-pipe-lookup",
+      "originalLocations": [
+        ".claude/skills/sql-pipe-lookup"
+      ],
+      "origin": {
+        "status": "local-source-unattributed"
+      },
+      "reviewNotes": [
+        "Contains Claude model or subagent terminology; cross-agent behavior needs review.",
+        "Contains machine-specific Windows paths.",
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "57195932e7a288aeb840e8cbe894b1e4416a690d3f230ca2adfdf93e5f0f82c9"
+        }
+      ]
+    },
+    {
+      "name": "tdd",
+      "importedFrom": ".agents/skills/tdd",
+      "originalLocations": [
+        ".agents/skills/tdd",
+        ".claude/skills/tdd"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/tdd/SKILL.md",
+        "recordedSkillFolderHash": "75beb3030b4c979205dd771ff85ac600baeb68f4",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "deep-modules.md",
+          "sha256": "76a813f34910d2431478652a92080d74e325b0f09e6ca3df39cf4d7b170576b7"
+        },
+        {
+          "path": "interface-design.md",
+          "sha256": "560c35db2cae66ebfa1b0f120d287666d7a12039ddda4b59613207ddf290fed4"
+        },
+        {
+          "path": "mocking.md",
+          "sha256": "73a10b6a26b56197c738a764c1e4205af98c74553f4a713795997f6bc35b917d"
+        },
+        {
+          "path": "refactoring.md",
+          "sha256": "7e94dbf6d1e14a778770cf1fb8f45e10449910eac1cc30f84f70890edeed4538"
+        },
+        {
+          "path": "SKILL.md",
+          "sha256": "95f66cc273f0dff4919d4251cd6572f0029cd551167d38024b4867f6b2816eba"
+        },
+        {
+          "path": "tests.md",
+          "sha256": "0ea0dcd32d5ad1d1ccd157baa3acf207507136592480bbef013b33b318a7526e"
+        }
+      ]
+    },
+    {
+      "name": "teach",
+      "importedFrom": ".agents/skills/teach",
+      "originalLocations": [
+        ".agents/skills/teach",
+        ".claude/skills/teach"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/productivity/teach/SKILL.md",
+        "recordedSkillFolderHash": "15f8c86d39ef834e643d092733ca899b59049067",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "GLOSSARY-FORMAT.md",
+          "sha256": "408c96dce06be99b53a6e05b1e3201c900bcbb46ae3cf08ead8aa3e3cb545d8c"
+        },
+        {
+          "path": "LEARNING-RECORD-FORMAT.md",
+          "sha256": "7bbbf6e325370633c77ec772cf4d30da19037ff2892c9e751f23e2696cf80888"
+        },
+        {
+          "path": "MISSION-FORMAT.md",
+          "sha256": "ba1bc536615a6940414d96a1d87562f8f2684f56649d44ba15abaaf1833d0ce9"
+        },
+        {
+          "path": "RESOURCES-FORMAT.md",
+          "sha256": "b5c7f17ce7c7b7f49a3a0007162e5024948c7b5c45c549643cafeb900ed431a6"
+        },
+        {
+          "path": "SKILL.md",
+          "sha256": "99c077a05f66237c95392dc440974e9d144c1267309e978c7a18aaf065ce7fd3"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "80e96a4d492ad8538e609672361e8543b69e7b22ce83be0efc2e5532472ede69"
+        }
+      ]
+    },
+    {
+      "name": "to-issues",
+      "importedFrom": ".agents/skills/to-issues",
+      "originalLocations": [
+        ".agents/skills/to-issues",
+        ".claude/skills/to-issues"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/to-issues/SKILL.md",
+        "recordedSkillFolderHash": "b38c5aa6ae5d6903e60d3f74a7aafd32d02f2c06",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "28b5742cc0d8bdc27284edd18d6f9b86107f8935487a76ee1ef7dcb9d151281f"
+        }
+      ]
+    },
+    {
+      "name": "to-prd",
+      "importedFrom": ".agents/skills/to-prd",
+      "originalLocations": [
+        ".agents/skills/to-prd",
+        ".claude/skills/to-prd"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/to-prd/SKILL.md",
+        "recordedSkillFolderHash": "d6eff3e99a325d2d9c2acbe31b4d76fa5340a154",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "9453d5caaa191ff8ce5529e38608b1255c68e738e4aa7bb2b23ca0dd4d2c4138"
+        }
+      ]
+    },
+    {
+      "name": "wayfinder",
+      "importedFrom": ".agents/skills/wayfinder",
+      "originalLocations": [
+        ".agents/skills/wayfinder",
+        ".claude/skills/wayfinder"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/wayfinder/SKILL.md",
+        "recordedSkillFolderHash": "33ed747fb30668c0e7b61698af5268c25c0d75cb",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [
+        "References project context, instruction files, or other workflows."
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "824e3cbb5beb15c5b17045070c4664f348abc506997a781f749258d2db49872a"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "3e698cdff8e84d0e900d8dec535060e9e6d16d923b313eefd881e958d164e37a"
+        }
+      ]
+    },
+    {
+      "name": "write-a-skill",
+      "importedFrom": ".agents/skills/write-a-skill",
+      "originalLocations": [
+        ".agents/skills/write-a-skill",
+        ".claude/skills/write-a-skill"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/productivity/write-a-skill/SKILL.md",
+        "recordedSkillFolderHash": "2f252b35aa238879afc5a230ac30343708dee0b3",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "eae171cbfca83dea0914ff6a2278059e2eafac11b5164f1d654511179d08241d"
+        }
+      ]
+    },
+    {
+      "name": "writing-great-skills",
+      "importedFrom": ".agents/skills/writing-great-skills",
+      "originalLocations": [
+        ".agents/skills/writing-great-skills",
+        ".claude/skills/writing-great-skills"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/productivity/writing-great-skills/SKILL.md",
+        "recordedSkillFolderHash": "81d36946d48842f90358d8af54e3cdcc141f8e01",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "GLOSSARY.md",
+          "sha256": "7c8b520536aa90fdd5ceeedfbfc5e24e21df0dd480619d9f2bba38c959f3c49e"
+        },
+        {
+          "path": "SKILL.md",
+          "sha256": "8c38389dbcfdb3605690c5ce2fe0fa433e7a2f2371a7f1e697d080d81d15fdea"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "94804e8234f8f146dc99fb8ae6106e8196914b24f86ffcbce952478498d090c5"
+        }
+      ]
+    },
+    {
+      "name": "zoom-out",
+      "importedFrom": ".agents/skills/zoom-out",
+      "originalLocations": [
+        ".agents/skills/zoom-out",
+        ".claude/skills/zoom-out"
+      ],
+      "origin": {
+        "status": "recorded-in-local-skill-lock",
+        "source": "mattpocock/skills",
+        "url": "https://github.com/mattpocock/skills.git",
+        "skillPath": "skills/engineering/zoom-out/SKILL.md",
+        "recordedSkillFolderHash": "6ecebabdea814d12888f56a611da7bf182b5fb26",
+        "note": "The installer-recorded folder hash is not a verified Git commit. Local content is preserved, not refreshed from upstream."
+      },
+      "reviewNotes": [],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "4fc05cfa89129515f6f01f52a31bbe36f327c54b322dbd3cb2c31f46a824b002"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "repositoryId": "agents-guide-to-the-galaxy",
+  "skills": [
+    {
+      "name": "ask-matt",
+      "agents": []
+    },
+    {
+      "name": "break-it-down",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "commit",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "convention-dx-review",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "create_session_summary",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "create-digest",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "diagnose",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "document-feature",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "dx-lookup",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "find-skills",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "grill-me",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "grill-with-docs",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "handoff",
+      "agents": []
+    },
+    {
+      "name": "learning-expedition",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "playwright-agent",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "prm-business-objects",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "prm-stateworkflow",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "prm-xaf-blazor-ui",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "prm-xaf-model",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "prototype",
+      "agents": []
+    },
+    {
+      "name": "sanitize-doc",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "search-knowledgebase",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "setup-matt-pocock-skills",
+      "agents": []
+    },
+    {
+      "name": "sql-lookup",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "sql-pipe-lookup",
+      "agents": [
+        "codex",
+        "claude"
+      ]
+    },
+    {
+      "name": "tdd",
+      "agents": []
+    },
+    {
+      "name": "teach",
+      "agents": []
+    },
+    {
+      "name": "to-issues",
+      "agents": []
+    },
+    {
+      "name": "to-prd",
+      "agents": []
+    },
+    {
+      "name": "wayfinder",
+      "agents": []
+    },
+    {
+      "name": "write-a-skill",
+      "agents": []
+    },
+    {
+      "name": "writing-great-skills",
+      "agents": []
+    },
+    {
+      "name": "zoom-out",
+      "agents": []
+    }
+  ],
+  "legacyCopies": [
+    {
+      "name": "learning-expedition",
+      "location": "codexLegacy"
+    }
+  ]
+}

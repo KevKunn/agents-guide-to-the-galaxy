@@ -1,9 +1,42 @@
 # Skills migration
 
+## Migration completed: 2026-09-08
+
+The owner created foundation commit `dcb610f`. The skills phase imported 33 skill
+folders and 60 original files without changing their content. `manifest.json`
+preserves the original selections: 26 Codex skills and 33 Claude Code skills.
+Source records, import hashes, and dependency notes are in `provenance.json` and
+`docs/skill-review.md`.
+
+The tested installer created 59 direct junctions to this repository. All 60
+original entries were backed up in the user's local application-data directory,
+including the extra `.codex/skills/learning-expedition` copy, which was retired.
+The broken `improve-codebase-architecture` junction remains unchanged and
+unmanaged because its source was absent.
+
+Verification completed:
+
+- All 60 imported file hashes matched the original snapshots.
+- The isolated installer suite passed 36 assertions, including content conflicts,
+  dry runs, adoption, configuration, shared edits, restoration, source retirement,
+  checkout relocation, rollback, and parent-link protection.
+- All 59 installed junctions and all 60 original backup entries were verified.
+- A new installation plan reported `Keep` for all managed records.
+- Codex's own app-server `skills/list` scan, with forced reload, found all 26
+  selected skills at canonical repository paths, enabled, with no scanner errors.
+- Claude's 33 junctions and entrypoint files were verified on disk. Discovery in a
+  fresh Claude Code session and each skill's external workflow remain manual
+  checks; no model task was launched for this migration.
+
+The skills migration files are left unstaged and uncommitted for owner review.
+Custom instructions have not been changed. See `docs/installation.md` for the
+implemented installer commands and recovery procedures; the planned behavior
+below records the original design.
+
 ## Initial inventory: 2026-09-08
 
-The repository started empty on branch `master`, with no commits. This foundation
-is ready for the owner to review and commit before importing skills.
+The repository started empty on branch `master`, with no commits. At that point, the foundation
+was ready for the owner to review and commit before importing skills.
 
 The inspection covered immediate skill directories in the three personal skill
 locations, their link targets, the presence of `SKILL.md`, and recursive file
