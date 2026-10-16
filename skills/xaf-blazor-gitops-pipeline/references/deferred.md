@@ -1,0 +1,17 @@
+# Deferred in the worked example, and what to do in a new app
+
+Items the worked example deliberately left open after its first green deploy. For each: what it is, why it was deferred, and what a new app should do.
+
+| Item | What | Why deferred there | In a new app |
+|---|---|---|---|
+| Selectable build agent (D87) | A self-hosted ARM build agent (Mac mini, Docker via Colima) as an alternative to Microsoft-hosted `ubuntu-24.04`. The .NET SDK segfaults under amd64 emulation, so the build stage must run on `$BUILDPLATFORM` and the image be built with `--platform linux/amd64`. | Kept the first version on one known agent; picked up only when asked for. | Start on `ubuntu-24.04`. Add the ARM agent only with a pool parameter and a Dockerfile whose build stage uses `FROM --platform=$BUILDPLATFORM` (the cross-build change is described, not yet built). |
+| Rollback drill (B6) | Prove the automatic rollback: a release that cannot start (e.g. stack variable `SIGNOZ_ENABLED` empty) is restarted 3 times and rolled back by `failure_action: rollback` within `monitor: 120s`; `portainer_redeploy.py` turns the pipeline red on `rollback_*`. | The green path was proven; the red path only with fake-API probes and a local single-node swarm (`updating` → `rollback_started` → `rollback_completed`, task error "unhealthy container"). The shared host had no memory headroom. | Do it once, on the user's go, while the host has headroom: break one stack variable in Portainer, watch the rollback (Portainer, SigNoz), restore the variable; then once through the pipeline. |
+| Data Protection keys (B5) | Keys live in `/home/app/.aspnet/DataProtection-Keys` in the container: each redeploy logs every user out and sends an `AntiforgeryValidationException` to Slack. | Found on the first deploy; deferred the same day. | Decide before go-live: persist the keys (Swarm volume at the key directory, or a database-backed key store), optionally protected by a certificate; prove that a redeploy keeps a session logged in. |
+| Test mail and role logins on Dev (B7) | One test mail that must arrive only at `SMTP_TEST_MAIL_RECIPIENT` (with `SentDate` set on the mail item), and a logon with each role besides the admin. | The stack was stopped because the host was above its memory limit. | Do both in the first-deploy session: mail safety (a non-Production environment requires a test recipient) and per-role logons are part of "deployed". |
+| Build Validation branch policy (B8) | A branch policy on the deploy branch that runs this pipeline as Build Validation for pull requests (`pr: none` in YAML; Image and Deploy skip `PullRequest` builds). | Direct pushes to the branch were the workflow. | Add it as soon as work arrives by pull request: Repos → Branches → `{{BRANCH}}` → Branch policies → Build Validation, this pipeline; prove one PR build. |
+
+Also open in the worked example, smaller:
+
+- `/app/FileData` and `/app/logs` are container-local: files stored through the default `FileDataPath` would be lost on each redeploy. The worked example stores attachments in the database, so no file data was at risk there. Mount a volume if the app stores files on disk.
+- A version-only release under `CheckCompatibilityType.DatabaseSchema`: every module updater sees `CurrentDBVersion` 0.0.0.0, so version-gated data updates in a module updater do not run as such. Check the updater for version gates before relying on them.
+- Hand-written SQL in a module updater can break on a fresh database (base skill, `database-migrations.md`); a restored, grown database does not show it.

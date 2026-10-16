@@ -1,0 +1,46 @@
+# gitleaks configuration for {{APP}}.
+#
+# A finding is reported, never silenced. Every entry below names the file, why it matches, and
+# what is owed. Entries for values that a default rule may not match today are accepted findings
+# declared in advance, so a newer rule set does not turn an already judged value into a red pipeline.
+
+title = "{{APP}}"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = """
+LEGACY TREE, deleted in <phase/ticket>. <path>/ is the <old host or framework copy> that the new
+host replaces; <file> carries <kind of credential>. The tree is not built into any image.
+FOLLOW-UP: the tree is deleted in <phase/ticket>; this entry goes with it.
+"""
+paths = ['''(^|/)<legacy path>/''']
+
+[[allowlists]]
+description = """
+ACCEPTED FINDING. <file> carries <kind of value>. <why it stays: owner, scope>. The file is
+excluded from every image by the .dockerignore. FOLLOW-UP: <rotation owner, or none>.
+"""
+paths = ['''(^|/)<path to file>$''']
+
+[[allowlists]]
+description = """
+TEST FIXTURE. <test file> feeds <dummy value> to <code under test>. The value is no
+credential, and the test project reaches no image. FOLLOW-UP: none.
+"""
+paths = ['''(^|/)Source/Test/<test project>/<test file>\.cs$''']
+
+[[allowlists]]
+description = """
+Developer working-tree artefacts. None of these is committed, so a clean CI checkout does not
+contain them; the paths are listed so a local `gitleaks dir` run over a working tree reports the
+same result as the pipeline. appsettings.Development.json is gitignored and excluded from every
+image. FOLLOW-UP: none.
+"""
+paths = [
+  '''(^|/)\.vs/''',
+  '''(^|/)bin/''',
+  '''(^|/)obj/''',
+  '''(^|/)appsettings\.Development\.json$''',
+]

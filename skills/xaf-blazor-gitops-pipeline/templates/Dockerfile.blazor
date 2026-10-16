@@ -1,0 +1,70 @@
+# syntax=docker/dockerfile:1
+# Build (repository root):
+#   docker buildx build --load -f .devops/docker/Dockerfile.blazor -t {{APP}}-blazor:<tag> \
+#     --secret id=dxlicense,src="$APPDATA/DevExpress/DevExpress_License.txt" .
+
+FROM mcr.microsoft.com/dotnet/sdk:{{SDK_VERSION}} AS build
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+WORKDIR /src
+
+COPY Source/NuGet.config Source/
+COPY Source/Directory.Build.props Source/
+COPY Source/Prod/Directory.Build.props Source/Prod/
+# Without a .razor item in the restore layer the publish lacks blazor.server.js.
+COPY Source/Prod/{{APP_PROJECT}}/{{APP_PROJECT}}.csproj Source/Prod/{{APP_PROJECT}}/packages.lock.json Source/Prod/{{APP_PROJECT}}/App.razor Source/Prod/{{APP_PROJECT}}/_Imports.razor Source/Prod/{{APP_PROJECT}}/
+COPY Source/Prod/{{MODULE_PROJECT}}/{{MODULE_PROJECT}}.csproj Source/Prod/{{MODULE_PROJECT}}/packages.lock.json Source/Prod/{{MODULE_PROJECT}}/
+COPY Source/Prod/{{MODULE_PROJECT}}.Blazor/{{MODULE_PROJECT}}.Blazor.csproj Source/Prod/{{MODULE_PROJECT}}.Blazor/packages.lock.json Source/Prod/{{MODULE_PROJECT}}.Blazor/
+# One COPY line per further project the host references (csproj + packages.lock.json), in the same form.
+
+RUN for project in $(find Source -name '*.csproj'); do \
+      sources=$(cd "$(dirname "$project")" && dotnet nuget list source --format short); \
+      echo "$project: $sources"; \
+      [ "$sources" = "E https://api.nuget.org/v3/index.json" ] || exit 1; \
+    done \
+ && dotnet restore Source/Prod/{{APP_PROJECT}}/{{APP_PROJECT}}.csproj --locked-mode -v n > /tmp/restore.log \
+ && requests=$(grep -cE '^\s*(GET|CACHE|OK) https://api\.nuget\.org/' /tmp/restore.log) \
+ && echo "requests to api.nuget.org: $requests" \
+ && [ "$requests" -gt 0 ] \
+ && ! grep -oE '(GET|CACHE|OK) https?://[^/ ]+' /tmp/restore.log | grep -vE ' https://api\.nuget\.org$'
+
+COPY Source/ Source/
+COPY .devops/docker/NoLicx.targets /src/NoLicx.targets
+
+RUN --mount=type=secret,id=dxlicense,required=true,target=/root/.config/DevExpress/DevExpress_License.txt \
+    dotnet publish Source/Prod/{{APP_PROJECT}}/{{APP_PROJECT}}.csproj \
+      -c Release --no-restore -o /app/publish \
+      -p:CustomAfterMicrosoftCommonTargets=/src/NoLicx.targets 2>&1 | tee /tmp/publish.log \
+ && echo "MSB3245 warnings: $(grep -c 'warning MSB3245' /tmp/publish.log || true)" \
+ && ! grep -E 'DX100[02]' /tmp/publish.log \
+ && test -n "$(find /app/publish -name 'blazor.server*.js' -print -quit)" \
+ && test -z "$(find /app/publish -iname 'nuget.config' -print -quit)"
+
+FROM mcr.microsoft.com/dotnet/aspnet:{{ASPNET_VERSION}} AS runtime
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core fonts-liberation fonts-crosextra-carlito tzdata \
+ && rm -rf /var/lib/apt/lists/*
+COPY <<EOF /etc/fonts/local.conf
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+<fontconfig>
+  <alias binding="same">
+    <family>Arial</family>
+    <accept><family>Liberation Sans</family></accept>
+  </alias>
+  <alias binding="same">
+    <family>Calibri</family>
+    <accept><family>Carlito</family></accept>
+  </alias>
+</fontconfig>
+EOF
+RUN fc-cache -f
+ENV TZ={{TZ}} \
+    ASPNETCORE_HTTP_PORTS={{PORT}}
+WORKDIR /app
+COPY --from=build /app/publish .
+RUN install -d -o "$APP_UID" -g "$APP_UID" /app/logs /app/FileData
+USER $APP_UID
+EXPOSE {{PORT}}
+HEALTHCHECK --interval=15s --timeout=5s --start-period=60s --retries=3 \
+  CMD ["bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/{{PORT}} && printf 'GET /LoginPage HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && head -n 1 <&3 | grep -q '^HTTP/1\\.1 200 '"]
+ENTRYPOINT ["dotnet", "{{APP_PROJECT}}.dll"]

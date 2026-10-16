@@ -1,0 +1,273 @@
+# {{APP}}: Checks -> Image -> Deploy to {{ENVIRONMENT}}.
+#
+#   Checks  unit tests and, on request, the security scans (gitleaks, Semgrep, vulnerable packages)
+#   Image   builds the image with the DevExpress licence as BuildKit secret, checks the history,
+#           Trivy and SBOM on request, pushes the version tag to the ACR (never latest)
+#   Deploy  redeploys the Portainer Repository stack {{STACK}} at that tag and waits for Swarm
+
+trigger:
+  branches:
+    include:
+      - {{BRANCH}}
+  paths:
+    exclude:
+      - '**/*.md'
+      - 'Doc/**'
+
+# Azure Repos ignores a YAML pr: trigger; PR checks come from a Build Validation branch policy.
+pr: none
+
+parameters:
+  - name: securityScans
+    displayName: 'Security scans (gitleaks, Semgrep, vulnerable packages, Trivy, SBOM)'
+    type: boolean
+    default: false
+  - name: tests
+    displayName: 'Unit tests'
+    type: boolean
+    default: true
+  - name: deploy
+    displayName: 'Deploy to {{ENVIRONMENT}} ({{BRANCH}} only)'
+    type: boolean
+    default: true
+
+variables:
+  # Not `version`: pipeline variables become environment variables, and MSBuild reads that one as Version.
+  - name: major
+    value: '1'
+  - name: minor
+    value: '0'
+  - name: patch
+    value: $[counter(format('{{APP}}.{0}.{1}', variables['major'], variables['minor']), 1)]
+  - name: imageVersion
+    value: '$(major).$(minor).$(patch)'
+
+  - name: acrLoginServer
+    value: '{{ACR}}'
+  - name: imageRepository
+    value: '{{IMAGE}}'
+  - name: dockerRegistryServiceConnection
+    value: '{{ACR_CONNECTION}}'
+
+  - name: sdkImage
+    value: 'mcr.microsoft.com/dotnet/sdk:{{SDK_VERSION}}'
+  - name: gitleaksImage
+    value: 'ghcr.io/gitleaks/gitleaks:v8.30.1'
+  - name: semgrepImage
+    value: 'semgrep/semgrep:1.178.0'
+  - name: trivyImage
+    value: 'aquasec/trivy:0.74.0'
+
+stages:
+  # =====================================================================================
+  - ${{ if or(parameters.tests, parameters.securityScans) }}:
+    - stage: Checks
+      displayName: 'Checks'
+      pool:
+        vmImage: 'ubuntu-24.04'
+      jobs:
+        - ${{ if parameters.tests }}:
+          - job: UnitTests
+            displayName: 'Unit tests'
+            steps:
+              - checkout: self
+
+              # NoLicx.targets skips the licx task LC, which the .NET MSBuild cannot run.
+              - bash: |
+                  set -euo pipefail
+                  results="$(Agent.TempDirectory)/testresults"
+                  mkdir -p "$results"
+                  docker run --rm \
+                    -v "$(Build.SourcesDirectory):/src" -v "$results:/results" -w /src \
+                    -e TZ={{TZ}} \
+                    "$(sdkImage)" bash -c '
+                      set -euo pipefail
+                      git config --global --add safe.directory /src
+                      dotnet restore Source/Test/{{TEST_PROJECT}}/{{TEST_PROJECT}}.csproj --locked-mode --configfile Source/NuGet.config
+                      dotnet test Source/Test/{{TEST_PROJECT}}/{{TEST_PROJECT}}.csproj -c Release --no-restore \
+                        -p:CustomAfterMicrosoftCommonTargets=/src/.devops/docker/NoLicx.targets \
+                        --filter "TestCategory!=Integration" \
+                        --logger "trx;LogFileName=unit.trx" --results-directory /results'
+                displayName: 'dotnet test (TestCategory!=Integration)'
+
+              - task: PublishTestResults@2
+                displayName: 'Publish test results'
+                condition: succeededOrFailed()
+                inputs:
+                  testResultsFormat: 'VSTest'
+                  testResultsFiles: '$(Agent.TempDirectory)/testresults/*.trx'
+                  testRunTitle: '{{TEST_PROJECT}} unit'
+                  failTaskOnFailedTests: true
+
+        - ${{ if parameters.securityScans }}:
+          - job: SecurityScans
+            displayName: 'Security scans'
+            steps:
+              - checkout: self
+
+              - bash: |
+                  set -euo pipefail
+                  out="$(Build.ArtifactStagingDirectory)/scans"
+                  mkdir -p "$out"
+                  chmod 777 "$out"
+                  docker run --rm -v "$(Build.SourcesDirectory):/repo:ro" -v "$out:/out" "$(gitleaksImage)" \
+                    dir /repo --no-banner --config /repo/.gitleaks.toml \
+                    --report-format json --report-path /out/gitleaks.json
+                displayName: 'gitleaks (fails on a finding)'
+
+              - bash: |
+                  set -euo pipefail
+                  out="$(Build.ArtifactStagingDirectory)/scans"
+                  docker run --rm -v "$(Build.SourcesDirectory):/src:ro" -v "$out:/out" -w /src "$(semgrepImage)" \
+                    semgrep scan --config p/csharp --config p/secrets \
+                    --exclude Source/Test --exclude bin --exclude obj --exclude node_modules \
+                    --metrics=off --sarif --output /out/semgrep.sarif
+                  count=$(python3 -c "import json,sys; print(len(json.load(open(sys.argv[1]))['runs'][0]['results']))" "$out/semgrep.sarif")
+                  echo "##vso[task.logissue type=warning]Semgrep: $count finding(s), see artifact security-scans/semgrep.sarif"
+                displayName: 'Semgrep (report only)'
+                condition: succeededOrFailed()
+
+              - bash: |
+                  set -euo pipefail
+                  out="$(Build.ArtifactStagingDirectory)/scans"
+                  docker run --rm -v "$(Build.SourcesDirectory):/src" -v "$out:/out" -w /src "$(sdkImage)" bash -c '
+                    set -euo pipefail
+                    : > /out/vulnerable-packages.txt
+                    for project in {{MODULE_PROJECT}} {{MODULE_PROJECT}}.Blazor {{APP_PROJECT}}; do
+                      csproj="Source/Prod/$project/$project.csproj"
+                      dotnet restore "$csproj" --locked-mode --configfile Source/NuGet.config
+                      dotnet list "$csproj" package --vulnerable --include-transitive --no-restore --configfile Source/NuGet.config | tee -a /out/vulnerable-packages.txt
+                    done
+                    if grep -E "\s(High|Critical)\s" /out/vulnerable-packages.txt; then
+                      echo "##vso[task.logissue type=error]High or Critical vulnerable package(s), see artifact security-scans/vulnerable-packages.txt"
+                      exit 1
+                    fi'
+                displayName: 'Vulnerable packages (fails on High or Critical)'
+                condition: succeededOrFailed()
+
+              - publish: '$(Build.ArtifactStagingDirectory)/scans'
+                artifact: 'security-scans'
+                displayName: 'Publish scan reports'
+                condition: succeededOrFailed()
+
+  # =====================================================================================
+  - stage: Image
+    displayName: 'Image'
+    ${{ if or(parameters.tests, parameters.securityScans) }}:
+      dependsOn: Checks
+    ${{ else }}:
+      dependsOn: []
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    pool:
+      vmImage: 'ubuntu-24.04'
+    jobs:
+      - job: Image
+        displayName: 'Build, check and push'
+        steps:
+          - checkout: self
+
+          - task: DownloadSecureFile@1
+            name: dxLicenseFile
+            displayName: 'DevExpress licence (Secure File)'
+            inputs:
+              secureFile: 'DevExpress_License.txt'
+
+          - bash: |
+              set -euo pipefail
+              length=$(tr -d '\r\n' < "$(dxLicenseFile.secureFilePath)" | wc -c)
+              if [ "$length" -lt 100 ]; then
+                echo "##vso[task.logissue type=error]The licence key is only $length characters long; a real key has about 630. Probably the wrong Secure File."
+                exit 1
+              fi
+              echo "DevExpress licence file present ($length characters)"
+            displayName: 'Check licence file'
+
+          - bash: |
+              set -euo pipefail
+              docker buildx build --load --provenance=false --platform linux/amd64 --progress=plain \
+                -f .devops/docker/Dockerfile.blazor \
+                --secret id=dxlicense,src="$(dxLicenseFile.secureFilePath)" \
+                -t "$(acrLoginServer)/$(imageRepository):$(imageVersion)" \
+                "$(Build.SourcesDirectory)"
+            displayName: 'docker buildx build'
+
+          - bash: |
+              set -euo pipefail
+              needle=$(tr -d '\r\n' < "$(dxLicenseFile.secureFilePath)" | cut -c101-124)
+              history=$(docker history --no-trunc "$(acrLoginServer)/$(imageRepository):$(imageVersion)")
+              hits=$(grep -cF "$needle" <<< "$history" || true)
+              if [ "$hits" -ne 0 ]; then
+                echo "##vso[task.logissue type=error]The DevExpress licence key is in the image history."
+                exit 1
+              fi
+              echo "Image history holds no licence key."
+            displayName: 'No licence key in the image history'
+
+          - ${{ if parameters.securityScans }}:
+            - bash: |
+                set -euo pipefail
+                docker run --rm -v /var/run/docker.sock:/var/run/docker.sock "$(trivyImage)" \
+                  image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --no-progress \
+                  "$(acrLoginServer)/$(imageRepository):$(imageVersion)"
+              displayName: 'Trivy (fails on fixable HIGH/CRITICAL)'
+
+            - bash: |
+                set -euo pipefail
+                out="$(Build.ArtifactStagingDirectory)/sbom"
+                mkdir -p "$out"
+                chmod 777 "$out"
+                docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$out:/out" "$(trivyImage)" \
+                  image --format cyclonedx --output /out/{{APP}}-blazor.cdx.json --no-progress \
+                  "$(acrLoginServer)/$(imageRepository):$(imageVersion)"
+              displayName: 'SBOM (CycloneDX)'
+              condition: succeededOrFailed()
+
+            - publish: '$(Build.ArtifactStagingDirectory)/sbom'
+              artifact: 'sbom'
+              displayName: 'Publish SBOM'
+              condition: succeededOrFailed()
+
+          - task: Docker@2
+            displayName: 'Log in to the ACR'
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              command: 'login'
+
+          - bash: |
+              set -euo pipefail
+              docker push "$(acrLoginServer)/$(imageRepository):$(imageVersion)"
+            displayName: 'docker push $(imageVersion)'
+
+  # =====================================================================================
+  - stage: Deploy
+    displayName: 'Deploy {{ENVIRONMENT}}'
+    dependsOn: Image
+    lockBehavior: runLatest
+    condition: and(succeeded(), eq(${{ parameters.deploy }}, true), eq(variables['Build.SourceBranch'], 'refs/heads/{{BRANCH}}'), ne(variables['Build.Reason'], 'PullRequest'))
+    variables:
+      # PortainerUrl, PortainerEndpointId, PortainerApiKey (secret)
+      - group: {{VARIABLE_GROUP}}
+    pool:
+      name: {{AGENT_POOL}}
+    jobs:
+      - deployment: Deploy
+        displayName: 'Portainer redeploy {{STACK}}'
+        environment: {{ENVIRONMENT}}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                # Deployment jobs do not check out by themselves.
+                - checkout: self
+
+                - bash: |
+                    set -euo pipefail
+                    python3 .devops/scripts/portainer_redeploy.py {{STACK}} "$(PortainerEndpointId)" "$(imageVersion)" \
+                      --set APP_ENVIRONMENT={{ENVIRONMENT}} \
+                      --reference "$(Build.SourceBranch)" \
+                      --timeout 600 \
+                      --insecure
+                  displayName: 'Redeploy {{STACK}} at $(imageVersion)'
+                  env:
+                    PORTAINER_URL: $(PortainerUrl)
+                    PORTAINER_API_KEY: $(PortainerApiKey)

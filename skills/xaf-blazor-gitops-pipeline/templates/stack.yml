@@ -1,0 +1,89 @@
+# {{APP}} as a Docker Swarm stack (Portainer Repository stack "{{STACK}}", GitOps auto-update off).
+# The pipeline sets TAG and APP_ENVIRONMENT and redeploys through .devops/scripts/portainer_redeploy.py.
+#
+# Every ${VAR} is a Portainer stack variable. An unset variable becomes an empty string, without an error.
+# SECRET_* hold only the names of external Swarm secrets; each secret is mounted at
+# /run/secrets/<configuration key with __> and overrides an environment variable of the same key.
+
+services:
+  {{SERVICE}}:
+    image: ${ACR}/{{IMAGE}}:${TAG}
+    labels:
+      - "app.environment=${APP_ENVIRONMENT}"
+    networks:
+      - traefik_proxy
+    environment:
+      # Outside Production a set SMTP host and port require SmtpSettings__TestMailRecipient.
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-{{ENVIRONMENT}}}
+      AppUrl: ${APP_URL}
+      # SMTP_PORT, SMTP_SKIP_MAIL_SENDING and SIGNOZ_ENABLED must hold a number or true/false:
+      # an empty value stops the app at start (exit 1).
+      SmtpSettings__Host: ${SMTP_HOST}
+      SmtpSettings__Port: ${SMTP_PORT}
+      SmtpSettings__From: ${SMTP_FROM}
+      # MailKit always authenticates (the smtp_password secret is always mounted);
+      # an unset SMTP_USERNAME logs in with an empty user name.
+      SmtpSettings__Username: ${SMTP_USERNAME}
+      # MailKit SecureSocketOptions; Auto uses STARTTLS on port 587.
+      SmtpSettings__UseSsl: ${SMTP_USE_SSL:-Auto}
+      SmtpSettings__TestMailRecipient: ${SMTP_TEST_MAIL_RECIPIENT}
+      SmtpSettings__SkipMailSending: ${SMTP_SKIP_MAIL_SENDING}
+      SigNoz__Enabled: ${SIGNOZ_ENABLED}
+      SigNoz__OtlpEndpoint: ${SIGNOZ_OTLP_ENDPOINT}
+      SigNoz__ServiceNameSuffix: ${SIGNOZ_SERVICE_NAME_SUFFIX}
+    secrets:
+      - source: connection_string
+        target: ConnectionStrings__ConnectionString
+      - source: url_signing_key
+        target: DevExpress__ExpressApp__Security__UrlSigningKey
+      - source: slack_webhook
+        target: Slack__WebHookUrl
+      - source: smtp_password
+        target: SmtpSettings__Password
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: stop-first
+        failure_action: rollback
+        monitor: 120s
+      rollback_config:
+        parallelism: 1
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+      labels:
+        - "redeploy.tracked=true"
+        - "traefik.enable=true"
+        - "traefik.swarm.network=traefik_proxy"
+        - "traefik.http.routers.${ROUTER}.rule=Host(`${DOMAIN}`)"
+        - "traefik.http.routers.${ROUTER}.entrypoints=websecure"
+        - "traefik.http.routers.${ROUTER}.tls=true"
+        - "traefik.http.routers.${ROUTER}.tls.certresolver=le"
+        - "traefik.http.services.${ROUTER}.loadbalancer.server.port={{PORT}}"
+
+networks:
+  traefik_proxy:
+    external: true
+
+secrets:
+  # Create with printf '%s' value | docker secret create <name> - ; secrets are immutable, rotate by a new name.
+  connection_string:
+    external: true
+    name: ${SECRET_CONNECTION_STRING}
+  url_signing_key:
+    external: true
+    name: ${SECRET_URL_SIGNING_KEY}
+  slack_webhook:
+    external: true
+    name: ${SECRET_SLACK_WEBHOOK}
+  smtp_password:
+    external: true
+    name: ${SECRET_SMTP_PASSWORD}

@@ -1,0 +1,13 @@
+*
+!.devops/docker/NoLicx.targets
+!Source/Directory.Build.props
+!Source/Prod/Directory.Build.props
+!Source/Prod/{{APP_PROJECT}}/
+!Source/Prod/{{MODULE_PROJECT}}/
+!Source/Prod/{{MODULE_PROJECT}}.Blazor/
+**/bin/
+**/obj/
+**/*.user
+**/appsettings.Development*.json
+**/[Nn][Uu][Gg][Ee][Tt].[Cc][Oo][Nn][Ff][Ii][Gg]
+!Source/NuGet.config
