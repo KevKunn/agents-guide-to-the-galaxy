@@ -1,5 +1,5 @@
 """Usage: python gen-report.py [sweep_dir] [out.html]  ->  default <sweep_dir>/report/ui-sweep-report.html
-Serve it with serve-report.py so decisions are saved to report/review-decisions.json."""
+Register it with review-hub.py (or serve it with serve-report.py) so decisions are saved to report/review-decisions.json."""
 import base64, datetime, glob, html, json, os, re, sys
 from collections import Counter
 
@@ -305,6 +305,7 @@ code{font:12.5px/1.4 "JetBrains Mono",ui-monospace,Consolas,monospace;background
 #app{display:flex;flex-direction:column;min-height:100vh}
 body.m-review{overflow:hidden}body.m-review #app{height:100vh}
 body.m-list #review,body.m-list #dock,body.m-review #list{display:none}
+a.rv-ib{color:inherit;text-decoration:none}
 .rv-top{position:sticky;top:0;z-index:8;flex:none;display:flex;align-items:center;gap:10px 16px;padding:10px 16px;background:var(--bar);border-bottom:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .rv-ib{flex:none;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line2);background:var(--surface);color:var(--ink2);border-radius:8px;cursor:pointer;padding:0}
 .rv-ib:hover,.rv-ghost:hover{background:var(--soft);color:var(--ink)}
@@ -467,6 +468,7 @@ td.pass{background:var(--okbg);color:var(--okfg)}td.fail{background:var(--warnbg
 </style></head><body class="m-review">
 <div id="app">
 <header class="rv-top">
+ <a class="rv-ib" id="bhub" href="/" title="All reviews (review hub)" aria-label="All reviews"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></a>
  <button class="rv-ib" type="button" id="brail" title="Show or hide the step list ( [ )" aria-label="Show or hide the step list"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
  <div class="rv-ttl"><b id="ttitle"></b><span id="tsub" class="rv-hide-sm"></span></div>
  <div class="rv-prog rv-hide-md" aria-hidden="true"><i id="pap" style="background:var(--ok)"></i><i id="prw" style="background:var(--warn)"></i><i id="pcm" style="background:var(--acc)"></i></div>
@@ -651,6 +653,7 @@ function renderList(){const hide=$('lhide').checked;let n=0;
  $('lcount').textContent=n+' of '+STEPS.length+' steps'}
 function render(){renderTop();renderSync();if(P.mode==='review'){renderRail();renderStep();renderDock()}else renderList()}
 
+if(!/^\/r\//.test(location.pathname))$('bhub').remove();
 $('brail').onclick=()=>setRail(!P.rail);$('scrim').onclick=()=>setRail(false);
 $('mrev').onclick=()=>setMode('review');$('mlist').onclick=()=>setMode('list');
 $('dcomfy').onclick=()=>{P.compact=false;savePrefs();render()};$('dcomp').onclick=()=>{P.compact=true;savePrefs();render()};
@@ -742,6 +745,19 @@ os.makedirs(os.path.dirname(OUT), exist_ok=True)
 page = (PAGE.replace('__LIGHT__', LIGHT).replace('__DARK__', DARK).replace('__LANG__', esc(LANG)).replace('__LB__', esc(LBL_B)).replace('__LA__', esc(LBL_A).lower()).replace('__PTITLE__', esc(cfg.get('pageTitle', 'UI Sweep Report'))).replace('__LIST__', LIST_HTML)
         .replace('__DATA__', js(DATA)).replace('__PRELOAD__', js(preload)).replace('__IMG__', js(IMG)))
 open(OUT, 'w', encoding='utf-8').write(page)
+meta_steps, by_group = [], {}
+for f in data_findings:
+    g = f['group']
+    if g and g in by_group:
+        by_group[g]['ids'].append(f['id'])
+        continue
+    st = {'key': g or f['id'], 'ids': [f['id']], 'open': bool(((data_groups.get(g) if g else data_briefs.get(f['id'])) or {}).get('open'))}
+    if g:
+        by_group[g] = st
+    meta_steps.append(st)
+json.dump({'title': TITLE, 'subtitle': cfg.get('subtitle', ''), 'page': os.path.basename(OUT), 'findings': len(findings),
+           'generated': datetime.datetime.now().astimezone().isoformat(timespec='seconds'), 'steps': meta_steps},
+          open(os.path.join(os.path.dirname(OUT), 'review-meta.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 missing = sorted(j['id'] for j in findings if j['id'] not in status)
 no_desc = sorted(j['id'] for j in findings if not j['_issue'])
 print('written', OUT, round(os.path.getsize(OUT) / 1e6, 1), 'MB;', len(findings), 'findings;', len(coverage), 'coverage rows; without status:', ' '.join(missing) or '-',
