@@ -1,0 +1,35 @@
+{
+  "title": "UI sweep – MyApp",
+  "subtitle": "Branch feature/ui-polish · tenants T1, T2 · before = build before the fixes, after = same repro script on the fixed build",
+  "locale": "de-AT",
+  "uiLanguage": "German",
+  "adapter": "./adapter.mjs",
+  "playwrightFrom": null,
+  "reuseStorageState": false,
+  "settleMs": 1500,
+  "failedRequestPattern": "\\.(svg|png|gif|jpe?g|webp|ico)(\\?|$)",
+  "viewports": [
+    { "width": 1600, "height": 900 },
+    { "width": 1280, "height": 720 }
+  ],
+  "tenants": {
+    "T1": { "url": "http://localhost:5110", "db": "MyApp_T1" },
+    "T2": { "url": "http://localhost:5120", "db": "MyApp_T2" }
+  },
+  "navPlan": [
+    { "tenant": "T1", "user": "admin", "modules": ["Main", "Settings"] },
+    { "tenant": "T1", "user": "reader", "modules": ["Main"] },
+    { "tenant": "T2", "user": "admin" }
+  ],
+  "areas": {
+    "P": { "title": "Fixes made before the sweep", "preexisting": true },
+    "A": "Login, shell, navigation, start screens (all tenants)",
+    "B": "T1 main module lists and detail views",
+    "C": "T2 main module lists and detail views",
+    "D": "Settings, users, roles"
+  },
+  "audit": {
+    "rawExtra": "^MyApp[A-Z]"
+  },
+  "decisionsKey": "myapp-ui-sweep-review-v1"
+}
